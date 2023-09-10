@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import '../css/sidebar.css';
+import { saveLocation } from './savelocation';
 
 const { kakao } = window;
 
@@ -17,8 +18,8 @@ const MapContainer = ({ searchPlace }) => {
                 <h5>{place.place_name}</h5>
                 {place.road_address_name ? (
                   <>
-                    <span>{place.road_address_name}</span>
-                    <span className="jibun gray">
+                    <span style={{ display: 'block' }}>{place.road_address_name}</span>
+                    <span className="jibun gray" style={{ display: 'block' }}>
                       <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png" alt="지번" />
                       {place.address_name}
                     </span>
@@ -34,6 +35,7 @@ const MapContainer = ({ searchPlace }) => {
       </div>
     );
   };
+
   const itemsPerPage = 10; // 페이지 당 표시할 항목 수
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -58,6 +60,8 @@ const MapContainer = ({ searchPlace }) => {
 
   // 현재 페이지의 항목만 표시하기 위해 배열 슬라이스
   const placesToDisplay = places.slice(startIndex, endIndex);
+
+  // const [selectedPlace, setSelectedPlace] = useState(null);
 
   useEffect(() => {
     const container = document.getElementById('map');
@@ -116,19 +120,45 @@ const MapContainer = ({ searchPlace }) => {
 
       let isInfoWindowOpen = false; // 인포윈도우 상태를 추적하는 변수
 
+      const handleSaveLocation = () => {
+        saveLocation(place.place_name, place.address_name, place.phone, place.y, place.x);
+        console.log(place.y, place.x);
+        infowindow.close();
+        isInfoWindowOpen = false;
+      };
+
       // 마커에 클릭 이벤트 등록
       kakao.maps.event.addListener(marker, 'click', function () {
-        // 마커를 클릭하면 장소명이 인포윈도우에 표출
-        if (isInfoWindowOpen) {
-          infowindow.close();
-        } else {
-          infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+        // 마커 클릭 시 장소명이 인포윈도우에 표시됩니다.
+        if (!isInfoWindowOpen) {
+          infowindow.setContent(`
+            <div style="padding:5px;font-size:12px;">
+            ${place.place_name}
+            <br />
+            <button id="saveButton">저장</button>
+          </div>
+          `);
           infowindow.open(map, marker);
+
+          // '저장' 버튼이 DOM에 추가된 후에 이벤트 리스너 등록
+          setTimeout(() => {
+            const saveButton = document.getElementById('saveButton');
+            if (saveButton) saveButton.addEventListener('click', handleSaveLocation);
+          }, 0);
+          isInfoWindowOpen = true;
+        } else {
+          infowindow.close();
+          // 선택한 장소 정보 초기화 및 '저장' 버튼의 이벤트 리스너 제거
+          // setSelectedPlace(null);
+          // const saveButton = document.getElementById('saveButton');
+          const saveButton = document.getElementById('saveButton');
+          if (saveButton) saveButton.removeEventListener('click', handleSaveLocation);
+
+          isInfoWindowOpen = false;
         }
+
         const moveLatLon = new window.kakao.maps.LatLng(place.y, place.x);
         map.panTo(moveLatLon);
-        // 인포윈도우 상태를 토글
-        isInfoWindowOpen = !isInfoWindowOpen;
       });
     }
   }, [searchPlace]);
@@ -148,6 +178,7 @@ const MapContainer = ({ searchPlace }) => {
           </div>
         </div>
       )}
+
       <div
         id="map"
         style={{
