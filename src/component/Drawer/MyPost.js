@@ -69,7 +69,7 @@ function MyPost() {
         <div>
           {/* <button style={{marginLeft:'350px', border:'none', background:'transparent', fontWeight:'bold'}} onClick={()=>ViewByPlace()}>장소별로 보기</button> onClick={()=>setType(3) */}
           <div style={{ height: "88vh" }}>
-            {console.log("postdata" + Postdata)}
+            {console.log("postdata" + PostData)}
             {/* <ul style={{listStyle:'none'}}>
                             {PostData.map(post =>( //PostData.map(post =>(
                                 <li 
