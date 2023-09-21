@@ -8,6 +8,7 @@ import MyPost from "../component/Drawer/MyPost";
 import Map from "../component/KakaoMap/Map";
 import MiniBar from "../component/MiniBar";
 import { LoginStore } from "../zustand/LoginStore";
+import axios from "axios";
 // import { Logout } from "../component/Logout";
 import SearchPlace from "../component/KakaoMap/SearchPlace";
 
