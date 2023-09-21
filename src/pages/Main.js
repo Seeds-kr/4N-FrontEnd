@@ -8,7 +8,7 @@ import MyPost from "../component/Drawer/MyPost";
 import Map from "../component/KakaoMap/Map";
 import MiniBar from "../component/MiniBar";
 import { LoginStore } from "../zustand/LoginStore";
-import { Logout } from "../component/Logout";
+// import { Logout } from "../component/Logout";
 import SearchPlace from "../component/KakaoMap/SearchPlace";
 
 const Main = (props) => {
@@ -57,6 +57,24 @@ const Main = (props) => {
       setMyplace(false);
     } else {
       NotLogin();
+    }
+  }
+
+  function Logout() {
+    if (window.confirm("로그아웃 하시겠습니까?")) {
+      axios
+        .get("http://3.39.142.157:8000/logout/", {
+          withCredentials: true,
+        })
+        .then((result) => {
+          LoginStore.setState({ isLogin: false });
+          alert("로그아웃 성공");
+          navigate("/");
+        })
+        .catch((result) => {
+          alert("로그인 되어있지 않음");
+          navigate("/");
+        });
     }
   }
 
