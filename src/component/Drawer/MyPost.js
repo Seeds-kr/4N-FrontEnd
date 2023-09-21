@@ -16,7 +16,7 @@ function MyPost() {
   useEffect(() => {
     async function fetchData() {
       const data = await postData();
-      setPostData(data);
+      setPostData(data.user_posts);
     }
     fetchData();
   }, []);
@@ -69,23 +69,36 @@ function MyPost() {
         <div>
           {/* <button style={{marginLeft:'350px', border:'none', background:'transparent', fontWeight:'bold'}} onClick={()=>ViewByPlace()}>장소별로 보기</button> onClick={()=>setType(3) */}
           <div style={{ height: "88vh" }}>
-            {console.log("postdata" + PostData)}
-            {/* <ul style={{listStyle:'none'}}>
-                            {PostData.map(post =>( //PostData.map(post =>(
-                                <li 
-                                    key={post.id} 
-                                    style={{borderBottom:'solid 1px black', 
-                                    width:'90%', paddingBottom:'5px'}}>
-                                    <div
-                                        onClick={()=>PostClick(post)} 
-                                        style={{background:'transparent', 
-                                        border:'none',
-                                        whiteSpace:'nowrap',
-                                        overflow:'hidden',
-                                        textOverflow:'ellipsis'
-                                        }}>{post.title}</div></li>
-                            ))}
-                        </ul>  */}
+            {/* {console.log('postdata: '+ PostData)} */}
+            <ul style={{ listStyle: "none" }}>
+              {PostData.map(
+                (
+                  post //PostData.map(post =>(
+                ) => (
+                  <li
+                    key={post.id}
+                    style={{
+                      borderBottom: "solid 1px black",
+                      width: "90%",
+                      paddingBottom: "5px",
+                    }}
+                  >
+                    <div
+                      onClick={() => PostClick(post)}
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {post.title}
+                    </div>
+                  </li>
+                )
+              )}
+            </ul>
           </div>
         </div>
       );
