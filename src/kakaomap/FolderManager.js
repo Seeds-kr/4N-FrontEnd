@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const FolderManager = ({ place, folders, setFolders }) => {
+const FolderManager = ({ place, folders, setFolders, userId }) => {
   const [newFolderName, setNewFolderName] = useState('');
 
   const handleAddPlaceToFolder = async (folder) => {
@@ -14,12 +14,12 @@ const FolderManager = ({ place, folders, setFolders }) => {
         latitude: place.y,
       };
 
-      const response = await axios.put(`http://localhost:8000/folders/${folder.id}`, {
+      const response = await axios.put(`http://localhost:8000/foldersupdate/${folder.id}`, {
         places: [...folder.places, newPlace],
       });
 
       if (response.status === 200) {
-        alert('폴더에 장소를 성공적으로 저장하였습니다.');
+        alert('폴더에 장소를 성공적으로 추가하였습니다.');
 
         // 폴더 상태 업데이트
         setFolders((prevFolders) => prevFolders.map((f) => (f.id === folder.id ? response.data : f)));
@@ -40,10 +40,16 @@ const FolderManager = ({ place, folders, setFolders }) => {
         phone: place.phone,
       };
 
-      const response = await axios.post('http://localhost:8000/folders/', {
-        title: newFolderName,
-        places: [newPlace],
-      });
+      const response = await axios.post(
+        'http://localhost:8000/folders/',
+        {
+          title: newFolderName,
+          places: [newPlace],
+          user_id: userId,
+        },
+        { withCredentials: true }
+      );
+      console.log(userId);
 
       if (response.status === 201) {
         alert('새로운 폴더가 성공적으로 생성되었습니다.');
@@ -58,11 +64,12 @@ const FolderManager = ({ place, folders, setFolders }) => {
 
   return (
     <div>
-      {folders.map((folder) => (
-        <button key={folder.id} onClick={() => handleAddPlaceToFolder(folder)}>
-          {folder.title}
-        </button>
-      ))}
+      {folders &&
+        folders.map((folder) => (
+          <button key={folder.id} onClick={() => handleAddPlaceToFolder(folder)}>
+            {folder.title}
+          </button>
+        ))}
 
       <div>
         <input type="text" value={newFolderName} onChange={(e) => setNewFolderName(e.target.value)} />

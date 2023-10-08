@@ -6,7 +6,7 @@
 //   // const handleSaveLocation = () => {
 //   //   // 여기서는 folders 상태(즉, 현재의 모든 장소 정보)를 서버로 전송
 //   //   axios
-//   //     .post('http://127.0.0.1:8000/save_location/', folders)
+//   //     .post('http://localhost:8000/save_location/', folders)
 //   //     .then((response) => {
 //   //       if (response.status === 200) {
 //   //         console.log(response.data.message); // 서버로부터의 응답 메시지 출력
